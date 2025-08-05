@@ -1,10 +1,9 @@
 extends Node2D
 
 # 常量定义 - 手牌系统的基础配置
-const HAND_COUNT = 4  # 手牌最大数量
-const CARD_SCENE_PATH = "res://Scenes/cards.tscn"  # 卡牌场景的资源路径
 const CARD_WIDTH = 200  # 单张卡牌的宽度（用于计算排列位置）
 const HAND_Y_POSITION = 840  # 手牌在屏幕上的Y轴固定位置（底部区域）
+const DEFAULT_CARD_MOVE_SPEED = 0.1
 
 # 变量定义
 var player_hand = []  # 存储玩家当前手牌的数组
@@ -15,36 +14,23 @@ func _ready() -> void:
 	# 计算屏幕中心X坐标（用于后续手牌居中排列）
 	center_screen_x = get_viewport().size.x / 2
 	
-	# 预加载卡牌场景（提高实例化效率）
-	var card_scene = preload(CARD_SCENE_PATH)
 	
-	# 初始化手牌：创建指定数量的卡牌并加入手牌
-	for i in range(HAND_COUNT):
-		# 实例化新卡牌
-		var new_card = card_scene.instantiate()
-		# 将卡牌添加到卡片管理器节点（用于统一管理）
-		$"../CardsManager".add_child(new_card)
-		# 设置卡牌名称（便于调试和识别）
-		new_card.name = "Card"
-		# 将新卡牌加入手牌系统
-		add_card_to_hand(new_card)
-
 
 # 将卡牌添加到手牌数组并更新布局
-func add_card_to_hand(card):
+func add_card_to_hand(card,speed):
 	# 检查卡牌是否已在手牌中，避免重复添加
 	if card not in player_hand:
 		# 将新卡牌插入到手牌数组的最前面（最新的牌在最左/最右）
 		player_hand.insert(0, card)
 		# 更新所有手牌的位置排列
-		update_hand_positions()
+		update_hand_positions(speed)
 	else:
 		# 如果卡牌已在手牌中，仅播放位置动画（用于恢复位置）
-		animate_card_to_position(card, card.hand_position)
+		animate_card_to_position(card, card.hand_position,DEFAULT_CARD_MOVE_SPEED)
 
 
 # 更新所有手牌的位置，确保排列整齐
-func update_hand_positions():
+func update_hand_positions(speed):
 	# 遍历手牌数组中的每张卡牌
 	for i in range(player_hand.size()):
 		# 计算当前索引卡牌的X坐标和固定Y坐标
@@ -58,7 +44,7 @@ func update_hand_positions():
 		current_card.hand_position = new_position  # 存储目标位置到卡牌自身属性
 		
 		# 播放卡牌移动到目标位置的动画
-		animate_card_to_position(current_card, new_position)
+		animate_card_to_position(current_card, new_position,speed)
 
 
 # 计算指定索引卡牌的X坐标，实现居中排列
@@ -72,11 +58,11 @@ func calculate_card_position(index):
 
 
 # 卡牌移动到目标位置的动画效果
-func animate_card_to_position(card, new_position):
+func animate_card_to_position(card, new_position,speed):
 	# 创建一个tween动画对象（Godot的动画系统）
 	var tween = get_tree().create_tween()
 	# 100毫秒内将卡牌位置平滑过渡到新位置
-	tween.tween_property(card, "position", new_position, 0.1)
+	tween.tween_property(card, "position", new_position, speed)
 
 
 # 从手牌中移除指定卡牌并重新排列
@@ -86,5 +72,5 @@ func remove_card_from_hand(card):
 		# 从手牌数组中删除该卡牌
 		player_hand.erase(card)
 		# 重新计算并更新剩余手牌的位置
-		update_hand_positions()
+		update_hand_positions(DEFAULT_CARD_MOVE_SPEED)
 	

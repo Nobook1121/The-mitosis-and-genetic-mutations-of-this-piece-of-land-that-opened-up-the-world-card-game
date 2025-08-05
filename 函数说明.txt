@@ -1,0 +1,226 @@
+以下是按照要求整理的代码分析内容，包含函数、变量、常量及整体逻辑：
+
+
+### 一、card.tscn 脚本（卡牌节点）
+#### 函数列表及说明
+1. `_ready() -> void`
+   - 作用：节点就绪时初始化，连接卡牌信号到父节点
+   - 用到的变量：无局部变量，使用全局方法`get_parent()`
+   - 逻辑：调用父节点的`connect_card_signal`方法，将当前卡牌实例传递给父节点，建立信号关联
+
+2. `_on_area_2d_mouse_entered() -> void`
+   - 作用：鼠标进入卡牌碰撞区域时发射悬停信号
+   - 用到的变量：无局部变量，使用`self`（当前卡牌实例）
+   - 逻辑：触发`hovered`信号，通知监听者卡牌被悬停
+
+3. `_on_area_2d_mouse_exited() -> void`
+   - 作用：鼠标离开卡牌碰撞区域时发射取消悬停信号
+   - 用到的变量：无局部变量，使用`self`（当前卡牌实例）
+   - 逻辑：触发`hovered_off`信号，通知监听者卡牌悬停状态取消
+
+#### 变量及使用位置
+- `hand_position`（全局变量）：存储卡牌在手牌中的位置
+  - 用途：供手牌管理器（PlayerHand）记录和恢复卡牌位置
+  - 使用位置：PlayerHand的`update_hand_positions`和`add_card_to_hand`方法
+
+#### 常量：无自定义常量
+
+
+### 二、CardsManager 脚本（卡牌交互管理器）
+#### 函数列表及说明
+1. `_ready() -> void`
+   - 作用：初始化屏幕尺寸、节点引用和信号连接
+   - 用到的变量：`screen_size`、`player_hand_reference`
+   - 逻辑：获取屏幕尺寸，引用玩家手牌节点，连接输入管理器的鼠标释放信号
+
+2. `_process(delta: float) -> void`
+   - 作用：每帧更新拖拽中卡牌的位置
+   - 用到的变量：`card_being_dragged`、`screen_size`、`mouse_pos`（局部变量）
+   - 逻辑：若有拖拽中的卡牌，将其位置更新为鼠标位置（限制在屏幕内）
+
+3. `start_drag(card)`
+   - 作用：开始拖拽指定卡牌
+   - 用到的变量：`card_being_dragged`、`card`（参数）
+   - 逻辑：记录拖拽的卡牌，恢复其默认大小（取消悬停放大）
+
+4. `finish_drag()`
+   - 作用：结束拖拽并处理卡牌放置逻辑
+   - 用到的变量：`card_being_dragged`、`card_slot_found`（局部变量）、`player_hand_reference`
+   - 逻辑：检测是否有可用卡槽，有则放置卡牌并更新状态，无则放回手牌
+
+5. `connect_card_signal(card)`
+   - 作用：连接卡牌的悬停信号到管理器
+   - 用到的变量：`card`（参数）
+   - 逻辑：将卡牌的`hovered`和`hovered_off`信号绑定到管理器的处理函数
+
+6. `on_left_click_released()`
+   - 作用：响应鼠标左键释放事件
+   - 用到的变量：`card_being_dragged`
+   - 逻辑：若有拖拽中的卡牌，调用`finish_drag`结束拖拽
+
+7. `on_hovered_over_card(card)`
+   - 作用：处理卡牌被悬停的逻辑
+   - 用到的变量：`is_hovering_on_card`、`card`（参数）
+   - 逻辑：若当前无悬停卡牌，标记状态并高亮当前卡牌
+
+8. `on_hovered_off_card(card)`
+   - 作用：处理鼠标离开卡牌的逻辑
+   - 用到的变量：`is_hovering_on_card`、`card`（参数）、`new_card_hovered`（局部变量）
+   - 逻辑：取消当前卡牌高亮，检测是否有新悬停卡牌并切换高亮状态
+
+9. `highlight_card(card, hovered)`
+   - 作用：设置卡牌的高亮状态（缩放和层级）
+   - 用到的变量：`card`（参数）、`hovered`（参数）
+   - 逻辑：悬停时放大卡牌并提高层级，离开时恢复默认状态
+
+10. `raycast_check_for_card()`
+	- 作用：检测鼠标位置是否有卡牌
+	- 用到的变量：`space_state`（局部变量）、`parameters`（局部变量）、`result`（局部变量）
+	- 逻辑：通过物理射线检测，返回鼠标位置层级最高的卡牌
+
+11. `raycast_check_for_card_solt()`
+	- 作用：检测鼠标位置是否有卡槽
+	- 用到的变量：`space_state`（局部变量）、`parameters`（局部变量）、`result`（局部变量）
+	- 逻辑：通过物理射线检测，返回鼠标位置的卡槽节点
+
+12. `get_card_with_highest_z_index(card_results)`
+	- 作用：从碰撞结果中筛选层级最高的卡牌
+	- 用到的变量：`card_results`（参数）、`highest_z_card`（局部变量）、`highest_z_index`（局部变量）
+	- 逻辑：遍历碰撞结果，找到z轴层级最高的卡牌（解决重叠交互问题）
+
+#### 变量及使用位置
+- `screen_size`：存储屏幕尺寸，限制卡牌拖拽范围
+  - 使用位置：`_ready`、`_process`
+- `card_being_dragged`：跟踪当前拖拽的卡牌
+  - 使用位置：`_process`、`start_drag`、`finish_drag`、`on_left_click_released`、`on_hovered_off_card`
+- `is_hovering_on_card`：标记是否有卡牌被悬停
+  - 使用位置：`on_hovered_over_card`、`on_hovered_off_card`
+- `player_hand_reference`：引用玩家手牌容器
+  - 使用位置：`_ready`、`finish_drag`
+
+#### 常量
+- `COLLISION_MASK_CARD = 1`：卡牌碰撞层掩码，用于射线检测过滤
+- `COLLISION_MASK_CARD_SOLT = 2`：卡槽碰撞层掩码，用于射线检测过滤
+- `DEFAULT_CARD_MOVE_SPEED = 0.1`：卡牌移动默认速度
+
+
+### 三、桌面脚本（Deck 牌堆）
+#### 函数列表及说明
+1. `_ready() -> void`
+   - 作用：初始化牌堆剩余数量显示
+   - 用到的变量：`player_deck`、`$RichTextLabel`
+   - 逻辑：设置文本标签显示初始牌堆数量
+
+2. `draw_card()`
+   - 作用：从牌堆抽卡并添加到手牌
+   - 用到的变量：`player_deck`、`card_drawn`（局部变量）、`card_scene`（局部变量）、`new_card`（局部变量）
+   - 逻辑：移除牌堆顶部卡牌，更新UI；实例化新卡牌并添加到手牌管理器和卡牌管理器
+
+#### 变量及使用位置
+- `player_deck`：存储牌堆中的卡牌数据
+  - 使用位置：`_ready`、`draw_card`
+- `CARD_SCENE_PATH`：卡牌场景路径（常量）
+  - 使用位置：`draw_card`（加载卡牌场景）
+- `CARD_DRAW_SPEED`：抽卡动画速度（常量）
+  - 使用位置：`draw_card`（传递给手牌管理器）
+
+#### 常量
+- `CARD_SCENE_PATH = "res://Scenes/cards.tscn"`：卡牌场景资源路径
+- `CARD_DRAW_SPEED = 0.5`：抽卡动画速度
+
+
+### 四、输入管理器脚本（InputManager）
+#### 函数列表及说明
+1. `_ready() -> void`
+   - 作用：初始化卡牌管理器和牌堆的引用
+   - 用到的变量：`card_manager_reference`、`deck_reference`
+   - 逻辑：获取卡牌管理器和牌堆节点的引用
+
+2. `_input(event)`
+   - 作用：处理鼠标左键输入事件
+   - 用到的变量：`event`（参数）
+   - 逻辑：过滤鼠标左键事件，按下时发射点击信号并执行射线检测，释放时发射释放信号
+
+3. `raycast_at_cursor()`
+   - 作用：检测鼠标位置的交互对象（卡牌/牌堆）
+   - 用到的变量：`space_state`（局部变量）、`parameters`（局部变量）、`result`（局部变量）、`result_collision_mask`（局部变量）
+   - 逻辑：通过射线检测判断点击对象类型，触发对应逻辑（拖拽卡牌或抽卡）
+
+#### 变量及使用位置
+- `card_manager_reference`：引用卡牌管理器
+  - 使用位置：`_ready`、`raycast_at_cursor`（触发拖拽）
+- `deck_reference`：引用牌堆
+  - 使用位置：`_ready`、`raycast_at_cursor`（触发抽卡）
+
+#### 常量
+- `COLLISION_MASK_CARD = 1`：卡牌碰撞层掩码（与CardsManager一致）
+- `COLLISION_MASK_DECK = 4`：牌堆碰撞层掩码
+
+
+### 五、玩家手牌脚本（PlayerHand）
+#### 函数列表及说明
+1. `_ready() -> void`
+   - 作用：初始化屏幕中心X坐标
+   - 用到的变量：`center_screen_x`
+   - 逻辑：计算屏幕中心X坐标，作为手牌居中排列的基准
+
+2. `add_card_to_hand(card, speed)`
+   - 作用：添加卡牌到手牌并更新布局
+   - 用到的变量：`player_hand`、`card`（参数）、`speed`（参数）
+   - 逻辑：若卡牌不在手牌中则添加并更新布局，否则仅播放归位动画
+
+3. `update_hand_positions(speed)`
+   - 作用：更新所有手牌的位置排列
+   - 用到的变量：`player_hand`、`speed`（参数）、`new_position`（局部变量）、`current_card`（局部变量）
+   - 逻辑：遍历手牌，计算每张卡牌的目标位置并播放移动动画
+
+4. `calculate_card_position(index)`
+   - 作用：计算指定索引卡牌的X坐标
+   - 用到的变量：`index`（参数）、`x_offset`（局部变量）、`center_screen_x`
+   - 逻辑：根据手牌数量和索引，计算卡牌的居中排列X坐标
+
+5. `animate_card_to_position(card, new_position, speed)`
+   - 作用：播放卡牌移动到目标位置的动画
+   - 用到的变量：`card`（参数）、`new_position`（参数）、`speed`（参数）、`tween`（局部变量）
+   - 逻辑：使用Tween动画让卡牌平滑移动到目标位置
+
+6. `remove_card_from_hand(card)`
+   - 作用：从手牌移除卡牌并重新排列
+   - 用到的变量：`player_hand`、`card`（参数）
+   - 逻辑：从手牌数组移除卡牌，触发剩余卡牌的位置更新
+
+#### 变量及使用位置
+- `player_hand`：存储当前手牌的数组
+  - 使用位置：`add_card_to_hand`、`update_hand_positions`、`remove_card_from_hand`
+- `center_screen_x`：屏幕中心X坐标
+  - 使用位置：`_ready`、`calculate_card_position`
+- `CARD_WIDTH`：卡牌宽度（常量）
+  - 使用位置：`calculate_card_position`
+- `HAND_Y_POSITION`：手牌Y轴固定位置（常量）
+  - 使用位置：`update_hand_positions`
+- `DEFAULT_CARD_MOVE_SPEED`：默认移动速度（常量）
+  - 使用位置：`add_card_to_hand`、`remove_card_from_hand`
+
+#### 常量
+- `CARD_WIDTH = 200`：单张卡牌宽度
+- `HAND_Y_POSITION = 840`：手牌Y轴固定位置
+- `DEFAULT_CARD_MOVE_SPEED = 0.1`：卡牌移动默认速度
+
+
+### 整体代码逻辑
+1. **模块协作流程**：
+   - 输入管理器（InputManager）接收鼠标输入，通过射线检测判断交互对象（卡牌/牌堆）。
+   - 点击牌堆时，Deck脚本执行`draw_card`生成新卡牌，通过PlayerHand添加到手牌并排列。
+   - 点击卡牌时，CardsManager启动拖拽，`_process`实时更新卡牌位置；释放鼠标时检测是否放置到卡槽，否则由PlayerHand将卡牌放回手牌。
+   - 卡牌（card.tscn）通过悬停信号通知CardsManager，触发高亮效果（缩放+层级调整）。
+
+2. **核心交互逻辑**：
+   - 抽卡：InputManager → Deck.draw_card() → PlayerHand.add_card_to_hand() → 卡牌排列动画。
+   - 拖拽：InputManager检测点击 → CardsManager.start_drag() → 每帧更新位置 → 释放时CardsManager.finish_drag() → 放置或归位。
+   - 悬停：卡牌发射hovered信号 → CardsManager高亮卡牌 → 离开时发射hovered_off信号 → 取消高亮或切换目标。
+
+3. **数据流转**：
+   - 牌堆数据（player_deck）→ 抽卡后减少，生成卡牌实例 → 手牌数组（player_hand）管理 → 放置到卡槽后从手牌移除。
+
+
+以上内容完整涵盖了各脚本的函数、变量、常量及整体逻辑，可直接保存为txt文档。

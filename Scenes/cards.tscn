@@ -1,12 +1,13 @@
 [gd_scene load_steps=4 format=3 uid="uid://dd5q6hly7t6g4"]
 
 [ext_resource type="Script" uid="uid://ndyirirjj8ba" path="res://cards.gd" id="1_hef1n"]
-[ext_resource type="Texture2D" uid="uid://b2h3f6j15566o" path="res://texture/doctor.png" id="1_s483p"]
+[ext_resource type="Texture2D" uid="uid://b2h3f6j15566o" path="res://Assets/doctor.png" id="1_s483p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hef1n"]
 size = Vector2(284, 396)
 
 [node name="Cards" type="Node2D"]
+position = Vector2(200, 840)
 script = ExtResource("1_hef1n")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
