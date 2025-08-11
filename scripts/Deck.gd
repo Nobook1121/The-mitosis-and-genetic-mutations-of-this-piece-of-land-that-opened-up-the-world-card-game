@@ -14,7 +14,7 @@ var card_database_reference
 func _ready() -> void:
 	player_deck.shuffle()
 	# 初始化显示牌堆剩余卡牌数量（通过RichTextLabel组件展示）
-	$RichTextLabel.text = str(player_deck.size())
+	$CardsNumbers.text = str(player_deck.size())
 	card_database_reference = preload("res://scripts/CardDatabase.gd")
 
 
@@ -32,10 +32,10 @@ func draw_card():
 		# 隐藏牌堆的精灵图像（视觉上表示牌堆已空）
 		$Sprite2D.visible = false
 		# 隐藏剩余数量文本（无需再显示0）
-		$RichTextLabel.visible = false
+		$CardsNumbers.visible = false
 	
 	# 更新牌堆剩余数量的UI显示
-	$RichTextLabel.text = str(player_deck.size())
+	$CardsNumbers.text = str(player_deck.size())
 	
 	# 预加载卡牌场景（提前加载资源，避免实例化时卡顿）
 	var card_scene = preload(CARD_SCENE_PATH)

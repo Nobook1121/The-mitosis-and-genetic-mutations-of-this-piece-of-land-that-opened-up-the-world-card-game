@@ -6,6 +6,8 @@ extends Node2D
 const COLLISION_MASK_CARD = 1         # 卡牌碰撞层的掩码值（仅检测卡牌类型碰撞体）
 const COLLISION_MASK_CARD_SOLT = 2    # 卡槽碰撞层的掩码值（仅检测卡槽类型碰撞体）
 const DEFAULT_CARD_MOVE_SPEED = 0.1   # 卡牌移动（如放回手牌）的默认动画速度
+const DEFAULT_CARD_SCALE = 0.6
+const DEFAULT_CARD_BIGGER_SCALE = 0.65
 
 # 变量定义
 var screen_size                       # 存储屏幕尺寸向量，用于限制卡牌拖拽范围（防止拖出屏幕外）
@@ -41,12 +43,12 @@ func start_drag(card):
 	# 记录当前被拖拽的卡牌节点
 	card_being_dragged = card
 	# 拖拽时恢复卡牌默认大小（取消悬停状态的放大效果，避免拖拽中尺寸异常）
-	card.scale = Vector2(1, 1)
+	card.scale = Vector2(DEFAULT_CARD_SCALE, DEFAULT_CARD_SCALE)
 
 # 结束卡牌拖拽，处理放置逻辑（鼠标释放时调用）
 func finish_drag():
 	# 结束拖拽时恢复悬停放大效果（为下次悬停做准备）
-	card_being_dragged.scale = Vector2(1.05, 1.05)
+	card_being_dragged.scale = Vector2(DEFAULT_CARD_BIGGER_SCALE, DEFAULT_CARD_BIGGER_SCALE)
 	
 	# 通过射线检测判断鼠标释放位置是否有可用卡槽
 	var card_slot_found = raycast_check_for_card_solt()
@@ -106,12 +108,12 @@ func on_hovered_off_card(card):
 func highlight_card(card, hovered):
 	if hovered == true:
 		# 悬停时放大卡牌（1.05倍缩放，增强视觉焦点）
-		card.scale = Vector2(1.05, 1.05)
+		card.scale = Vector2(DEFAULT_CARD_BIGGER_SCALE, DEFAULT_CARD_BIGGER_SCALE)
 		# 提高z轴层级（确保悬停卡牌显示在其他卡牌上方，避免被遮挡）
 		card.z_index = 2
 	else:
 		# 离开悬停时恢复原大小
-		card.scale = Vector2(1, 1)
+		card.scale = Vector2(DEFAULT_CARD_SCALE, DEFAULT_CARD_SCALE)
 		# 恢复默认z轴层级
 		card.z_index = 1 
 
