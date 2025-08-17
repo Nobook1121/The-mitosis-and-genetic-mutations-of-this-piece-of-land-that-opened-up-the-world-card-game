@@ -2,7 +2,7 @@ extends Node2D
 
 # 常量定义 - 手牌系统的基础配置
 const CARD_WIDTH = 200  # 单张卡牌的宽度（用于计算排列位置）
-const HAND_Y_POSITION = 870  # 手牌在屏幕上的Y轴固定位置（底部区域）
+const HAND_Y_POSITION = 950  # 手牌在屏幕上的Y轴固定位置（底部区域）
 const DEFAULT_CARD_MOVE_SPEED = 0.1
 
 # 变量定义

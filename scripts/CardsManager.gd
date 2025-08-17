@@ -6,8 +6,8 @@ extends Node2D
 const COLLISION_MASK_CARD = 1         # 卡牌碰撞层的掩码值（仅检测卡牌类型碰撞体）
 const COLLISION_MASK_CARD_SOLT = 2    # 卡槽碰撞层的掩码值（仅检测卡槽类型碰撞体）
 const DEFAULT_CARD_MOVE_SPEED = 0.1   # 卡牌移动（如放回手牌）的默认动画速度
-const DEFAULT_CARD_SCALE = 0.6
-const DEFAULT_CARD_BIGGER_SCALE = 0.65
+const DEFAULT_CARD_SCALE = 0.5
+const DEFAULT_CARD_BIGGER_SCALE = 0.53
 
 # 变量定义
 var screen_size                       # 存储屏幕尺寸向量，用于限制卡牌拖拽范围（防止拖出屏幕外）

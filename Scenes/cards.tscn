@@ -164,8 +164,8 @@ _data = {
 }
 
 [node name="Cards" type="Node2D"]
-position = Vector2(200, 840)
-scale = Vector2(0.6, 0.6)
+position = Vector2(100, 950)
+scale = Vector2(0.55, 0.55)
 script = ExtResource("1_hef1n")
 
 [node name="CardBackImage" type="Sprite2D" parent="."]

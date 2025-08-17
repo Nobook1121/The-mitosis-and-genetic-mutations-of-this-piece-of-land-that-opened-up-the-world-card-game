@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://dsgk8gq3qb83v"]
+[gd_scene load_steps=9 format=3 uid="uid://dsgk8gq3qb83v"]
 
+[ext_resource type="Script" uid="uid://djotaynfsohoo" path="res://scenes/cards_solts_manager.gd" id="1_6bp64"]
 [ext_resource type="Script" uid="uid://df85tsq44c8ml" path="res://scripts/CardsManager.gd" id="1_8gbba"]
 [ext_resource type="PackedScene" uid="uid://gepbvfosm5vs" path="res://scenes/cardsolt.tscn" id="2_jjvhh"]
 [ext_resource type="Script" uid="uid://cuw2e3oy23lyp" path="res://scripts/playerhand.gd" id="3_kry3j"]
@@ -13,21 +14,42 @@ size = Vector2(284, 396)
 [node name="Main" type="Node2D"]
 
 [node name="CardsSoltsManager" type="Node2D" parent="."]
+script = ExtResource("1_6bp64")
 
-[node name="CardSolt" parent="CardsSoltsManager" instance=ExtResource("2_jjvhh")]
-position = Vector2(620, 677)
+[node name="Ready" type="Node2D" parent="CardsSoltsManager"]
+
+[node name="CardSolt1" parent="CardsSoltsManager/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(660, 740)
 scale = Vector2(0.6, 0.6)
 
-[node name="CardSolt2" parent="CardsSoltsManager" instance=ExtResource("2_jjvhh")]
-position = Vector2(615, 357)
+[node name="CardSolt2" parent="CardsSoltsManager/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(810, 740)
 scale = Vector2(0.6, 0.6)
 
-[node name="CardSolt3" parent="CardsSoltsManager" instance=ExtResource("2_jjvhh")]
-position = Vector2(1458, 708)
+[node name="CardSolt3" parent="CardsSoltsManager/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(960, 740)
 scale = Vector2(0.6, 0.6)
 
-[node name="CardSolt4" parent="CardsSoltsManager" instance=ExtResource("2_jjvhh")]
-position = Vector2(843, 351)
+[node name="CardSolt4" parent="CardsSoltsManager/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(1110, 740)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt5" parent="CardsSoltsManager/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(1260, 740)
+scale = Vector2(0.6, 0.6)
+
+[node name="Attack" type="Node2D" parent="CardsSoltsManager"]
+
+[node name="CardSolt1" parent="CardsSoltsManager/Attack" instance=ExtResource("2_jjvhh")]
+position = Vector2(810, 530)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt2" parent="CardsSoltsManager/Attack" instance=ExtResource("2_jjvhh")]
+position = Vector2(960, 530)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt3" parent="CardsSoltsManager/Attack" instance=ExtResource("2_jjvhh")]
+position = Vector2(1110, 530)
 scale = Vector2(0.6, 0.6)
 
 [node name="CardsManager" type="Node2D" parent="."]
@@ -37,8 +59,8 @@ script = ExtResource("1_8gbba")
 script = ExtResource("3_kry3j")
 
 [node name="Deck" type="Node2D" parent="."]
-position = Vector2(150, 870)
-scale = Vector2(0.6, 0.6)
+position = Vector2(100, 950)
+scale = Vector2(0.55, 0.55)
 script = ExtResource("4_kry3j")
 
 [node name="Sprite2D" type="Sprite2D" parent="Deck"]
@@ -71,3 +93,45 @@ offset_left = 68.0
 offset_top = 478.0
 offset_right = 158.0
 offset_bottom = 529.0
+text = "结束回合"
+
+[node name="OpponentsDeck" type="Node2D" parent="."]
+
+[node name="CardsSoltsManagerOpponents" type="Node2D" parent="OpponentsDeck"]
+script = ExtResource("1_6bp64")
+
+[node name="Ready" type="Node2D" parent="OpponentsDeck/CardsSoltsManagerOpponents"]
+
+[node name="CardSolt1" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(660, 740)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt2" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(810, 740)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt3" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(960, 100)
+scale = Vector2(0.5, 0.5)
+
+[node name="CardSolt4" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(1110, 740)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt5" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
+position = Vector2(1260, 740)
+scale = Vector2(0.6, 0.6)
+
+[node name="Attack" type="Node2D" parent="OpponentsDeck/CardsSoltsManagerOpponents"]
+
+[node name="CardSolt1" parent="OpponentsDeck/CardsSoltsManagerOpponents/Attack" instance=ExtResource("2_jjvhh")]
+position = Vector2(810, 530)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt2" parent="OpponentsDeck/CardsSoltsManagerOpponents/Attack" instance=ExtResource("2_jjvhh")]
+position = Vector2(960, 530)
+scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt3" parent="OpponentsDeck/CardsSoltsManagerOpponents/Attack" instance=ExtResource("2_jjvhh")]
+position = Vector2(1110, 530)
+scale = Vector2(0.6, 0.6)

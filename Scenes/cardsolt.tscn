@@ -10,6 +10,7 @@ size = Vector2(180, 266)
 script = ExtResource("1_b7ecp")
 
 [node name="CardSoltImage" type="Sprite2D" parent="."]
+scale = Vector2(1.2, 1.2)
 texture = ExtResource("1_rvnjm")
 
 [node name="Area2D" type="Area2D" parent="."]
