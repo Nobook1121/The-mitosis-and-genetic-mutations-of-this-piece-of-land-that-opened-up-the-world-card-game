@@ -7,8 +7,10 @@ const CARD_SCENE_PATH = "res://Scenes/cards.tscn"  # 卡牌场景资源路径（
 const CARD_DRAW_SPEED = 0.5                        # 抽卡动画的速度参数（控制卡牌移动到手牌的平滑度）
 
 # 玩家牌堆数据（存储待抽取的卡牌名称/ID，示例初始为3张"Doctor"卡牌）
-var player_deck = ["doctor", "chara2", "chara3"]
+var player_deck = ["doctor", "chara2", "chara3","doctor", "chara2", "chara3","doctor", "chara2", "chara3"]
 var card_database_reference
+var drawn_card_this_turn = false
+var starting_hand_size = 5
 
 # 节点就绪时调用（初始化UI显示）
 func _ready() -> void:
@@ -16,10 +18,16 @@ func _ready() -> void:
 	# 初始化显示牌堆剩余卡牌数量（通过RichTextLabel组件展示）
 	$CardsNumbers.text = str(player_deck.size())
 	card_database_reference = preload("res://scripts/CardDatabase.gd")
-
+	for i in range(starting_hand_size):
+		draw_card()
+		drawn_card_this_turn = false
+	drawn_card_this_turn = true
 
 # 抽卡逻辑：从牌堆取出一张卡牌并添加到手牌
-func draw_card():
+func draw_card():# 抽卡逻辑：从牌堆取出一张卡牌并添加到手牌
+	if drawn_card_this_turn:
+		return
+	drawn_card_this_turn = true
 	# 从牌堆顶部（数组第一个元素）抽取一张卡牌
 	var card_drawn_name = player_deck[0]
 	# 从牌堆中移除已抽取的卡牌

@@ -39,7 +39,7 @@ func _input(event):
 			pass 
 
 
-# 射线检测：在鼠标位置发射射线，判断点击的是卡牌还是牌堆
+## 射线检测：在鼠标位置发射射线，判断点击的是卡牌还是牌堆
 func raycast_at_cursor():
 	# 获取2D物理空间状态（用于执行碰撞检测）
 	var space_state = get_world_2d().direct_space_state

@@ -14,6 +14,7 @@ var screen_size                       # 存储屏幕尺寸向量，用于限制�
 var card_being_dragged                # 跟踪当前正在被拖拽的卡牌节点（null表示无拖拽）
 var is_hovering_on_card = false       # 状态标记：是否有卡牌正被鼠标悬停（用于高亮逻辑互斥）
 var player_hand_reference             # 玩家手牌容器节点的引用（用于卡牌回收、排列等管理）
+var card_slot_reference
 
 # 节点就绪时调用（初始化逻辑）
 func _ready() -> void:
@@ -21,6 +22,7 @@ func _ready() -> void:
 	screen_size = get_viewport_rect().size
 	# 获取玩家手牌容器的引用（路径需根据实际场景结构调整，确保能正确找到手牌节点）
 	player_hand_reference = $"../PlayerHand"
+	card_slot_reference = $"../CardsSoltsManager"
 	# 连接输入管理器的鼠标左键释放信号到本节点的处理函数（响应拖拽结束）
 	$"../InputManager".connect("left_mouse_button_released", on_left_click_released)
 
@@ -54,7 +56,7 @@ func finish_drag():
 	var card_slot_found = raycast_check_for_card_solt()
 	
 	# 如果找到卡槽且该卡槽为空（未放置卡牌）
-	if card_slot_found and not card_slot_found.card_in_slot:
+	if card_slot_found and not card_slot_found.card_in_slot and card_slot_found.card_slot_type == "ready":
 		# 从玩家手牌中移除该卡牌（更新手牌数据和布局）
 		player_hand_reference.remove_card_from_hand(card_being_dragged)
 		# 将卡牌移动到卡槽位置（视觉上放置到卡槽）

@@ -7,6 +7,7 @@ var cards_solts_manager_reference
 var new_position
 var x_position
 var y_position
+var card_slot_type = "ready"
 
 
 #func _ready() -> void:

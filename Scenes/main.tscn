@@ -1,12 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://dsgk8gq3qb83v"]
+[gd_scene load_steps=12 format=3 uid="uid://dsgk8gq3qb83v"]
 
 [ext_resource type="Script" uid="uid://djotaynfsohoo" path="res://scenes/cards_solts_manager.gd" id="1_6bp64"]
 [ext_resource type="Script" uid="uid://df85tsq44c8ml" path="res://scripts/CardsManager.gd" id="1_8gbba"]
 [ext_resource type="PackedScene" uid="uid://gepbvfosm5vs" path="res://scenes/cardsolt.tscn" id="2_jjvhh"]
+[ext_resource type="Script" uid="uid://d15eoo7ai8njd" path="res://scenes/ready.gd" id="2_tipki"]
 [ext_resource type="Script" uid="uid://cuw2e3oy23lyp" path="res://scripts/playerhand.gd" id="3_kry3j"]
+[ext_resource type="Script" uid="uid://dqc3wkqws7swa" path="res://scenes/attackcardsolt.gd" id="4_85g3d"]
 [ext_resource type="Texture2D" uid="uid://4k548bg8v664" path="res://assets/desk.png" id="4_jjvhh"]
 [ext_resource type="Script" uid="uid://dufice3k5oiyi" path="res://scripts/Deck.gd" id="4_kry3j"]
 [ext_resource type="Script" uid="uid://b7vkc3j1wtxxf" path="res://scripts/InputManager.gd" id="6_21xkr"]
+[ext_resource type="PackedScene" uid="uid://ctgnfpm7opg0n" path="res://scenes/enemycardsolt.tscn" id="10_choun"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8gbba"]
 size = Vector2(284, 396)
@@ -17,6 +20,7 @@ size = Vector2(284, 396)
 script = ExtResource("1_6bp64")
 
 [node name="Ready" type="Node2D" parent="CardsSoltsManager"]
+script = ExtResource("2_tipki")
 
 [node name="CardSolt1" parent="CardsSoltsManager/Ready" instance=ExtResource("2_jjvhh")]
 position = Vector2(660, 740)
@@ -43,14 +47,17 @@ scale = Vector2(0.6, 0.6)
 [node name="CardSolt1" parent="CardsSoltsManager/Attack" instance=ExtResource("2_jjvhh")]
 position = Vector2(810, 530)
 scale = Vector2(0.6, 0.6)
+script = ExtResource("4_85g3d")
 
 [node name="CardSolt2" parent="CardsSoltsManager/Attack" instance=ExtResource("2_jjvhh")]
 position = Vector2(960, 530)
 scale = Vector2(0.6, 0.6)
+script = ExtResource("4_85g3d")
 
 [node name="CardSolt3" parent="CardsSoltsManager/Attack" instance=ExtResource("2_jjvhh")]
 position = Vector2(1110, 530)
 scale = Vector2(0.6, 0.6)
+script = ExtResource("4_85g3d")
 
 [node name="CardsManager" type="Node2D" parent="."]
 script = ExtResource("1_8gbba")
@@ -97,41 +104,54 @@ text = "结束回合"
 
 [node name="OpponentsDeck" type="Node2D" parent="."]
 
-[node name="CardsSoltsManagerOpponents" type="Node2D" parent="OpponentsDeck"]
-script = ExtResource("1_6bp64")
+[node name="EnemyCardSolt" type="Node2D" parent="OpponentsDeck"]
 
-[node name="Ready" type="Node2D" parent="OpponentsDeck/CardsSoltsManagerOpponents"]
-
-[node name="CardSolt1" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
-position = Vector2(660, 740)
+[node name="CardSolt" parent="OpponentsDeck/EnemyCardSolt" instance=ExtResource("10_choun")]
+position = Vector2(1110, 110)
 scale = Vector2(0.6, 0.6)
 
-[node name="CardSolt2" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
-position = Vector2(810, 740)
+[node name="CardSolt2" parent="OpponentsDeck/EnemyCardSolt" instance=ExtResource("10_choun")]
+position = Vector2(960, 320)
 scale = Vector2(0.6, 0.6)
 
-[node name="CardSolt3" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
-position = Vector2(960, 100)
-scale = Vector2(0.5, 0.5)
-
-[node name="CardSolt4" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
-position = Vector2(1110, 740)
+[node name="CardSolt3" parent="OpponentsDeck/EnemyCardSolt" instance=ExtResource("10_choun")]
+position = Vector2(960, 110)
 scale = Vector2(0.6, 0.6)
 
-[node name="CardSolt5" parent="OpponentsDeck/CardsSoltsManagerOpponents/Ready" instance=ExtResource("2_jjvhh")]
-position = Vector2(1260, 740)
+[node name="CardSolt4" parent="OpponentsDeck/EnemyCardSolt" instance=ExtResource("10_choun")]
+position = Vector2(810, 110)
 scale = Vector2(0.6, 0.6)
 
-[node name="Attack" type="Node2D" parent="OpponentsDeck/CardsSoltsManagerOpponents"]
-
-[node name="CardSolt1" parent="OpponentsDeck/CardsSoltsManagerOpponents/Attack" instance=ExtResource("2_jjvhh")]
-position = Vector2(810, 530)
+[node name="CardSolt5" parent="OpponentsDeck/EnemyCardSolt" instance=ExtResource("10_choun")]
+position = Vector2(660, 110)
 scale = Vector2(0.6, 0.6)
 
-[node name="CardSolt2" parent="OpponentsDeck/CardsSoltsManagerOpponents/Attack" instance=ExtResource("2_jjvhh")]
-position = Vector2(960, 530)
+[node name="CardSolt6" parent="OpponentsDeck/EnemyCardSolt" instance=ExtResource("10_choun")]
+position = Vector2(1260, 110)
 scale = Vector2(0.6, 0.6)
 
-[node name="CardSolt3" parent="OpponentsDeck/CardsSoltsManagerOpponents/Attack" instance=ExtResource("2_jjvhh")]
-position = Vector2(1110, 530)
+[node name="CardSolt7" parent="OpponentsDeck/EnemyCardSolt" instance=ExtResource("10_choun")]
+position = Vector2(810, 320)
 scale = Vector2(0.6, 0.6)
+
+[node name="CardSolt8" parent="OpponentsDeck/EnemyCardSolt" instance=ExtResource("10_choun")]
+position = Vector2(1110, 320)
+scale = Vector2(0.6, 0.6)
+
+[node name="Deck" type="Node2D" parent="OpponentsDeck"]
+position = Vector2(1820, 130)
+scale = Vector2(0.55, 0.55)
+
+[node name="Sprite2D" type="Sprite2D" parent="OpponentsDeck/Deck"]
+z_index = -2
+texture = ExtResource("4_jjvhh")
+
+[node name="CardsNumbers" type="RichTextLabel" parent="OpponentsDeck/Deck"]
+modulate = Color(0, 0, 0, 1)
+z_index = -2
+offset_left = -14.055
+offset_top = -88.57
+offset_right = 25.945
+offset_bottom = -48.57
+scale = Vector2(3.215, 3.215)
+text = "0"

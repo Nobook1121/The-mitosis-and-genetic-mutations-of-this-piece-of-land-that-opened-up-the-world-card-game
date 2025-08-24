@@ -8,6 +8,8 @@ signal hovered_off # 取消悬停信号，携带当前卡牌实例作为参数
 
 # 存储卡牌在玩家手牌中的位置信息（可能用于布局排列、移动动画等）
 var hand_position
+var card_slot_is_in
+var card_type
 
 # 节点就绪时调用（节点及其子节点加载完成后执行）
 func _ready() -> void:
